@@ -1,5 +1,3 @@
-#nullable enable
-
 using System.Security.Cryptography;
 
 namespace Buildalyzer;
@@ -33,7 +31,7 @@ internal static class ProjectGuid
     [Pure]
     private static byte[] Hash(byte[] bytes)
     {
-       // convert the namespace UUID to network order (step 3)
+        // convert the namespace UUID to network order (step 3)
         var ns = UrlNamespace.ToByteArray();
         SwapBytes(ns);
 

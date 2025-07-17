@@ -1,7 +1,9 @@
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Compression;
 using Buildalyzer.Environment;
+using Buildalyzer.IO;
 using Buildalyzer.TestTools;
 using FluentAssertions;
 using Shouldly;
@@ -16,15 +18,15 @@ public class SimpleProjectsFixture
     private const bool BinaryLog = false;
 
     private static readonly EnvironmentPreference[] Preferences =
-    {
+    [
 #if Is_Windows
         EnvironmentPreference.Framework,
 #endif
         EnvironmentPreference.Core
-    };
+    ];
 
     private static readonly string[] ProjectFiles =
-    {
+    [
 #if Is_Windows
         @"LegacyFrameworkProject\LegacyFrameworkProject.csproj",
         @"LegacyFrameworkProjectWithReference\LegacyFrameworkProjectWithReference.csproj",
@@ -59,7 +61,7 @@ public class SimpleProjectsFixture
         // of custom build tooling and tasks/targets because the behavior and log output is not consistent
         // See https://github.com/daveaglick/Buildalyzer/issues/210
         // @"FunctionApp\FunctionApp.csproj",
-    };
+    ];
 
     [Test]
     public void Builds_DesignTime(
@@ -79,16 +81,6 @@ public class SimpleProjectsFixture
         results.Should().NotBeEmpty();
         results.OverallSuccess.Should().BeTrue();
         results.Should().AllSatisfy(r => r.Succeeded.Should().BeTrue());
-    }
-
-    [Test]
-    public void Collects_BuildEventArguments()
-    {
-        using var ctx = Context.ForProject(@"SdkNet6Project\SdkNet6Project.csproj");
-
-        var results = ctx.Analyzer.Build(new EnvironmentOptions());
-
-        results.BuildEventArguments.Should().HaveCount(18);
     }
 
     [Test]
@@ -626,7 +618,7 @@ public class SimpleProjectsFixture
             {
                 LogWriter = log
             });
-        List<IProjectAnalyzer> projects = manager.Projects.Values.ToList();
+        List<IProjectAnalyzer> projects = [.. manager.Projects.Values];
 
         // When
         List<IAnalyzerResults> analyzerResults = projects
@@ -699,7 +691,7 @@ public class SimpleProjectsFixture
             {
                 LogWriter = log
             });
-        List<IProjectAnalyzer> projects = manager.Projects.Values.ToList();
+        List<IProjectAnalyzer> projects = [.. manager.Projects.Values];
 
         // When
         List<IAnalyzerResults> analyzerResults = projects

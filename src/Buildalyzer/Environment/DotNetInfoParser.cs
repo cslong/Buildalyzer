@@ -1,6 +1,3 @@
-#nullable enable
-
-using System;
 using System.IO;
 
 namespace Buildalyzer.Environment;
@@ -77,14 +74,14 @@ internal static class DotNetInfoParser
 
         void AddSdk(string line)
         {
-            if (line.Split(new[] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries) is { Length: 2 } parts)
+            if (line.Split(Splitters, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries) is { Length: 2 } parts)
             {
                 sdks[parts[0]] = UnifyPath(Path.Combine(parts[1], parts[0]));
             }
         }
         void AddRunTime(string line)
         {
-            if (line.Split(new[] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries) is { Length: 2 } parts)
+            if (line.Split(Splitters, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries) is { Length: 2 } parts)
             {
                 runtimes[parts[0]] = UnifyPath(parts[1]);
             }
@@ -158,4 +155,6 @@ internal static class DotNetInfoParser
         "Learn more:",
         "Download .NET:",
     };
+
+    private static readonly char[] Splitters = ['[', ']'];
 }

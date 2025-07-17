@@ -59,7 +59,7 @@ public static class AnalyzerResultExtensions
         ProjectId projectId = ProjectId.CreateFromSerialized(analyzerResult.ProjectGuid);
 
         // Cache the project references
-        analyzerResult.Manager.WorkspaceProjectReferences[projectId.Id] = analyzerResult.ProjectReferences.ToArray();
+        analyzerResult.Manager.WorkspaceProjectReferences[projectId.Id] = [.. analyzerResult.ProjectReferences];
 
         // Create and add the project, but only if it's a support Roslyn project type
         ProjectInfo projectInfo = GetProjectInfo(analyzerResult, workspace, projectId);
@@ -92,7 +92,7 @@ public static class AnalyzerResultExtensions
         // Add any project references not already added
         if (addProjectReferences)
         {
-            foreach (ProjectAnalyzer referencedAnalyzer in GetReferencedAnalyzerProjects(analyzerResult))
+            foreach (var referencedAnalyzer in GetReferencedAnalyzerProjects(analyzerResult))
             {
                 // Check if the workspace contains the project inside the loop since adding one might also add this one due to transitive references
                 if (!workspace.CurrentSolution.Projects.Any(x => x.FilePath == referencedAnalyzer.ProjectFile.Path))
@@ -104,8 +104,8 @@ public static class AnalyzerResultExtensions
 
         // By now all the references of this project have been recursively added, so resolve any remaining transitive project references
         Project project = workspace.CurrentSolution.GetProject(projectId);
-        HashSet<ProjectReference> referencedProjects = new HashSet<ProjectReference>(project.ProjectReferences);
-        HashSet<ProjectId> visitedProjectIds = new HashSet<ProjectId>();
+        HashSet<ProjectReference> referencedProjects = [.. project.ProjectReferences];
+        HashSet<ProjectId> visitedProjectIds = [];
         Stack<ProjectReference> projectReferenceStack = new Stack<ProjectReference>(project.ProjectReferences);
         while (projectReferenceStack.Count > 0)
         {

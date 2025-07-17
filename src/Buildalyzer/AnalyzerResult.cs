@@ -7,8 +7,8 @@ namespace Buildalyzer;
 [DebuggerDisplay("{DebuggerDisplay}")]
 public class AnalyzerResult : IAnalyzerResult
 {
-    private readonly Dictionary<string, string> _properties = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-    private readonly Dictionary<string, IProjectItem[]> _items = new Dictionary<string, IProjectItem[]>(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, string> _properties = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, IProjectItem[]> _items = new(StringComparer.OrdinalIgnoreCase);
     private readonly Guid _projectGuid;
 
     public CompilerCommand CompilerCommand { get; private set; }
@@ -71,7 +71,7 @@ public class AnalyzerResult : IAnalyzerResult
     public string[] References =>
         CompilerCommand?.MetadataReferences.ToArray() ?? [];
 
-    public ImmutableDictionary<string, ImmutableArray<string>> ReferenceAliases => 
+    public ImmutableDictionary<string, ImmutableArray<string>> ReferenceAliases =>
         CompilerCommand?.Aliases ?? ImmutableDictionary<string, ImmutableArray<string>>.Empty;
 
     public string[] AnalyzerReferences =>
@@ -141,7 +141,7 @@ public class AnalyzerResult : IAnalyzerResult
         // Add items
         foreach (var items in propertiesAndItems.Items)
         {
-            _items[items.Key] = items.Values.Select(task => new ProjectItem(task)).ToArray();
+            _items[items.Key] = [.. items.Values.Select(task => new ProjectItem(task))];
         }
     }
 
@@ -165,7 +165,7 @@ public class AnalyzerResult : IAnalyzerResult
         CompilerCommand = Compiler.CommandLine.Parse(new FileInfo(ProjectFilePath).Directory, commandLine, CompilerLanguage.FSharp);
     }
 
-    private class ProjectItemItemSpecEqualityComparer : IEqualityComparer<IProjectItem>
+    private sealed class ProjectItemItemSpecEqualityComparer : IEqualityComparer<IProjectItem>
     {
         public bool Equals(IProjectItem x, IProjectItem y) => x.ItemSpec.Equals(y.ItemSpec, StringComparison.OrdinalIgnoreCase);
 

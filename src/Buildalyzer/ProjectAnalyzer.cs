@@ -18,9 +18,9 @@ public class ProjectAnalyzer : IProjectAnalyzer
     private readonly List<ILogger> _buildLoggers = [];
 
     // Project-specific global properties and environment variables
-    private readonly ConcurrentDictionary<string, string> _globalProperties = new ConcurrentDictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+    private readonly ConcurrentDictionary<string, string> _globalProperties = new(StringComparer.OrdinalIgnoreCase);
 
-    private readonly ConcurrentDictionary<string, string> _environmentVariables = new ConcurrentDictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+    private readonly ConcurrentDictionary<string, string> _environmentVariables = new(StringComparer.OrdinalIgnoreCase);
 
     public AnalyzerManager Manager { get; }
 
@@ -84,7 +84,7 @@ public class ProjectAnalyzer : IProjectAnalyzer
         }
 
         // Create a new build environment for each target
-        AnalyzerResults results = new AnalyzerResults();
+        AnalyzerResults results = [];
         foreach (string targetFramework in targetFrameworks)
         {
             BuildEnvironment buildEnvironment = EnvironmentFactory.GetBuildEnvironment(targetFramework, environmentOptions);
@@ -105,7 +105,7 @@ public class ProjectAnalyzer : IProjectAnalyzer
             targetFrameworks = [null];
         }
 
-        AnalyzerResults results = new AnalyzerResults();
+        AnalyzerResults results = [];
         foreach (string targetFramework in targetFrameworks)
         {
             BuildTargets(buildEnvironment, targetFramework, buildEnvironment.TargetsToBuild, results);
@@ -132,7 +132,7 @@ public class ProjectAnalyzer : IProjectAnalyzer
             Guard.NotNull(buildEnvironment),
             targetFramework,
             buildEnvironment.TargetsToBuild,
-            new AnalyzerResults());
+            []);
 
     /// <inheritdoc/>
     public IAnalyzerResults Build() => Build((string)null);
@@ -222,7 +222,7 @@ public class ProjectAnalyzer : IProjectAnalyzer
         }
 
         // Get the rest of the arguments
-        List<string> argumentsList = new List<string>();
+        List<string> argumentsList = [];
 
         // Environment arguments
         if (buildEnvironment.Arguments.Any())

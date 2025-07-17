@@ -3,14 +3,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Buildalyzer.Logging;
 
-public class TextWriterLoggerProvider : ILoggerProvider
+public class TextWriterLoggerProvider(TextWriter textWriter) : ILoggerProvider
 {
-    private readonly TextWriter _textWriter;
-
-    public TextWriterLoggerProvider(TextWriter textWriter)
-    {
-        _textWriter = textWriter;
-    }
+    private readonly TextWriter _textWriter = Guard.NotNull(textWriter);
 
     public void Dispose()
     {

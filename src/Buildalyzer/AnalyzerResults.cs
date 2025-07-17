@@ -5,7 +5,7 @@ namespace Buildalyzer;
 
 public class AnalyzerResults : IAnalyzerResults
 {
-    private readonly ConcurrentDictionary<string, IAnalyzerResult> _results = new ConcurrentDictionary<string, IAnalyzerResult>();
+    private readonly ConcurrentDictionary<string, IAnalyzerResult> _results = new();
 
     private bool? _overallSuccess = null;
 
@@ -39,7 +39,7 @@ public class AnalyzerResults : IAnalyzerResults
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-    private class TargetFrameworkComparer : IComparer<string>
+    private sealed class TargetFrameworkComparer : IComparer<string>
     {
         public static TargetFrameworkComparer Instance { get; } = new TargetFrameworkComparer();
 

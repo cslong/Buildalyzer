@@ -12,8 +12,6 @@ public class Analyzer_Build
         using var ctx = Context.ForProject(@"BuildWithError\BuildWithError.csproj");
         var results = ctx.Analyzer.Build(new EnvironmentOptions() { DesignTime = false });
 
-        Console.WriteLine(ctx.Log);
-
         results.OverallSuccess.Should().BeFalse();
         results.Should().AllSatisfy(r => r.Succeeded.Should().BeFalse());
     }
@@ -23,8 +21,6 @@ public class Analyzer_Build
     {
         using var ctx = Context.ForProject(@"BuildWithError\BuildWithError.MultiTarget.csproj");
         var results = ctx.Analyzer.Build(new EnvironmentOptions() { DesignTime = false });
-
-        Console.WriteLine(ctx.Log);
 
         results.OverallSuccess.Should().BeFalse();
         results.Should().AllSatisfy(r => r.Succeeded.Should().BeFalse());

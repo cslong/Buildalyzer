@@ -175,7 +175,7 @@ public class ProjectAnalyzerExtensionsFixture
         // When
         Compilation compilation = await project.GetCompilationAsync();
 
-        Diagnostic[] diagnostics = compilation.GetDiagnostics().Where(d => d.Id == "CS8632").ToArray();
+        Diagnostic[] diagnostics = [.. compilation.GetDiagnostics().Where(d => d.Id == "CS8632")];
 
         diagnostics.ShouldBeEmpty();
     }
@@ -193,11 +193,10 @@ public class ProjectAnalyzerExtensionsFixture
         // When
         Compilation compilation = await project.GetCompilationAsync();
 
-        Diagnostic[] diagnostics = compilation.GetDiagnostics().Where(d => d.Severity == DiagnosticSeverity.Error).ToArray();
+        Diagnostic[] diagnostics = [.. compilation.GetDiagnostics().Where(d => d.Severity == DiagnosticSeverity.Error)];
 
         diagnostics.ShouldBeEmpty();
     }
-
 
     [Test(Description = "Test Reference Alias support")]
 
@@ -212,7 +211,7 @@ public class ProjectAnalyzerExtensionsFixture
         // When
         Compilation compilation = await project.GetCompilationAsync();
 
-        Diagnostic[] diagnostics = compilation.GetDiagnostics().Where(d => d.Severity == DiagnosticSeverity.Error).ToArray();
+        Diagnostic[] diagnostics = [.. compilation.GetDiagnostics().Where(d => d.Severity == DiagnosticSeverity.Error)];
 
         diagnostics.ShouldBeEmpty();
     }
