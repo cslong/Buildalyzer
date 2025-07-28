@@ -1,5 +1,3 @@
-#nullable enable
-
 namespace Buildalyzer;
 
 [DebuggerDisplay("Count = {Count}")]
@@ -10,6 +8,9 @@ namespace Buildalyzer;
 public sealed class CompilerProperties : IReadOnlyCollection<CompilerProperty>
 #pragma warning restore CA1710 // Identifiers should have correct suffix
 {
+    /// <summary>Gets empty <see cref="CompilerProperties"/>.</summary>
+    public static readonly CompilerProperties Empty = new();
+
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     private readonly Dictionary<string, object> _values = new(StringComparer.OrdinalIgnoreCase);
 
@@ -42,7 +43,7 @@ public sealed class CompilerProperties : IReadOnlyCollection<CompilerProperty>
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     [Pure]
-    internal static CompilerProperties FromDictionaryEntries(IEnumerable properties)
+    internal static CompilerProperties FromDictionaryEntries(IEnumerable? properties)
     {
         CompilerProperties props = new CompilerProperties();
 

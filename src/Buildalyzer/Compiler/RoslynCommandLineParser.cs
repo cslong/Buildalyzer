@@ -1,6 +1,3 @@
-#nullable enable
-
-using System;
 using Microsoft.CodeAnalysis;
 
 namespace Buildalyzer;
@@ -9,7 +6,7 @@ internal static class RoslynCommandLineParser
 {
     [Pure]
     public static string[]? SplitCommandLineIntoArguments(string? commandLine, params string[] execs)
-        => Split(CommandLineParser.SplitCommandLineIntoArguments(commandLine ?? string.Empty, removeHashComments: true).ToArray(), execs);
+        => Split([.. CommandLineParser.SplitCommandLineIntoArguments(commandLine ?? string.Empty, removeHashComments: true)], execs);
 
     [Pure]
     private static string[]? Split(string[] args, string[] execs)

@@ -1,5 +1,3 @@
-#nullable enable
-
 using Microsoft.Build.Framework;
 
 namespace Buildalyzer;
@@ -8,8 +6,11 @@ namespace Buildalyzer;
 [DebuggerTypeProxy(typeof(Diagnostics.CollectionDebugView<CompilerItems>))]
 public sealed class CompilerItemsCollection : IReadOnlyCollection<CompilerItems>
 {
+    /// <summary>Gets an empty <see cref="CompilerItemsCollection"/>.</summary>
+    public static readonly CompilerItemsCollection Empty = new();
+
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private readonly Dictionary<string, IReadOnlyCollection<ITaskItem>> _values = new Dictionary<string, IReadOnlyCollection<ITaskItem>>(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, IReadOnlyCollection<ITaskItem>> _values = new(StringComparer.OrdinalIgnoreCase);
 
     private CompilerItemsCollection()
     {
@@ -40,7 +41,7 @@ public sealed class CompilerItemsCollection : IReadOnlyCollection<CompilerItems>
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     [Pure]
-    internal static CompilerItemsCollection FromDictionaryEntries(IEnumerable properties)
+    internal static CompilerItemsCollection FromDictionaryEntries(IEnumerable? properties)
     {
         CompilerItemsCollection props = new CompilerItemsCollection();
 
@@ -51,7 +52,7 @@ public sealed class CompilerItemsCollection : IReadOnlyCollection<CompilerItems>
                 if (!props._values.TryGetValue(key, out IReadOnlyCollection<ITaskItem>? values)
                     || values is not List<ITaskItem> editable)
                 {
-                    editable = new List<ITaskItem>();
+                    editable = [];
                     props._values[key] = editable;
                 }
                 editable.Add(task);

@@ -1,6 +1,5 @@
 using System.Collections.Immutable;
 using Buildalyzer.IO;
-using FluentAssertions;
 using FSharp.Compiler.CodeAnalysis;
 using Microsoft.CodeAnalysis;
 using Microsoft.FSharp.Collections;
@@ -146,7 +145,7 @@ Program.fs";
         }
     }
 
-    private static ImmutableArray<IOPath> Files(params string[] files) => [..files.Select(IOPath.Parse)];
+    private static ImmutableArray<IOPath> Files(params string[] files) => [.. files.Select(IOPath.Parse)];
 
     private static ImmutableArray<string> Array(params string[] references) => [.. references];
 }

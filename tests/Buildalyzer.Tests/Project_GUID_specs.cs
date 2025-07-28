@@ -1,7 +1,4 @@
-#nullable enable
-
 using Buildalyzer;
-using FluentAssertions;
 
 namespace Project_GUID_specs;
 

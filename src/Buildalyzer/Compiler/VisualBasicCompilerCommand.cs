@@ -1,5 +1,3 @@
-#nullable enable
-
 using Microsoft.CodeAnalysis.VisualBasic;
 
 namespace Buildalyzer;

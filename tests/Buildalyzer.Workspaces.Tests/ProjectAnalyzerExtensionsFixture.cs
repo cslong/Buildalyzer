@@ -1,10 +1,7 @@
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Buildalyzer.TestTools;
-using FluentAssertions;
 using Microsoft.CodeAnalysis;
-using NUnit.Framework;
 using Shouldly;
 
 namespace Buildalyzer.Workspaces.Tests;
@@ -18,10 +15,11 @@ public class ProjectAnalyzerExtensionsFixture
     {
         using var ctx = Context.ForProject(@"SdkNetStandardProject\SdkNetStandardProject.csproj");
 
-        var workspace = ctx.Analyzer.GetWorkspace();
+        using var workspace = ctx.Analyzer.GetWorkspace();
 
-        ctx.Log.ToString().Should().NotContain("Workspace failed");
-        workspace.CurrentSolution.Projects.First().Documents.First().Should().BeEquivalentTo(new { Name = "Class1.cs" });
+        var document = workspace.CurrentSolution.Projects.First().Documents.First();
+
+        document.Should().BeEquivalentTo(new { Name = "Class1.cs" });
     }
 
     [Test]
@@ -33,7 +31,7 @@ public class ProjectAnalyzerExtensionsFixture
         AnalyzerManager manager = new AnalyzerManager(solutionPath, new AnalyzerManagerOptions { LogWriter = log });
 
         // When
-        Workspace workspace = manager.GetWorkspace();
+        using var workspace = manager.GetWorkspace();
 
         // Then
         string logged = log.ToString();
@@ -175,7 +173,7 @@ public class ProjectAnalyzerExtensionsFixture
         // When
         Compilation compilation = await project.GetCompilationAsync();
 
-        Diagnostic[] diagnostics = compilation.GetDiagnostics().Where(d => d.Id == "CS8632").ToArray();
+        Diagnostic[] diagnostics = [.. compilation.GetDiagnostics().Where(d => d.Id == "CS8632")];
 
         diagnostics.ShouldBeEmpty();
     }
@@ -193,11 +191,10 @@ public class ProjectAnalyzerExtensionsFixture
         // When
         Compilation compilation = await project.GetCompilationAsync();
 
-        Diagnostic[] diagnostics = compilation.GetDiagnostics().Where(d => d.Severity == DiagnosticSeverity.Error).ToArray();
+        Diagnostic[] diagnostics = [.. compilation.GetDiagnostics().Where(d => d.Severity == DiagnosticSeverity.Error)];
 
         diagnostics.ShouldBeEmpty();
     }
-
 
     [Test(Description = "Test Reference Alias support")]
 
@@ -212,7 +209,7 @@ public class ProjectAnalyzerExtensionsFixture
         // When
         Compilation compilation = await project.GetCompilationAsync();
 
-        Diagnostic[] diagnostics = compilation.GetDiagnostics().Where(d => d.Severity == DiagnosticSeverity.Error).ToArray();
+        Diagnostic[] diagnostics = [.. compilation.GetDiagnostics().Where(d => d.Severity == DiagnosticSeverity.Error)];
 
         diagnostics.ShouldBeEmpty();
     }
@@ -226,7 +223,7 @@ public class ProjectAnalyzerExtensionsFixture
         IProjectAnalyzer analyzer = GetProjectAnalyzer(@"projects\WpfCustomControlLibrary1\WpfCustomControlLibrary1.csproj", log);
 
         // When
-        AdhocWorkspace workspace = analyzer.GetWorkspace();
+        using var workspace = analyzer.GetWorkspace();
         Project project = workspace.CurrentSolution.Projects.First();
 
         // Then

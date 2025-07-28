@@ -6,10 +6,10 @@ namespace Buildalyzer.Logging;
 
 internal class EventProcessor : IDisposable
 {
-    private readonly Dictionary<string, AnalyzerResult> _results = new Dictionary<string, AnalyzerResult>();
-    private readonly Stack<AnalyzerResult> _currentResult = new Stack<AnalyzerResult>();
-    private readonly Stack<TargetStartedEventArgs> _targetStack = new Stack<TargetStartedEventArgs>();
-    private readonly Dictionary<int, PropertiesAndItems> _evalulationResults = new Dictionary<int, PropertiesAndItems>();
+    private readonly Dictionary<string, AnalyzerResult> _results = [];
+    private readonly Stack<AnalyzerResult> _currentResult = new();
+    private readonly Stack<TargetStartedEventArgs> _targetStack = new();
+    private readonly Dictionary<int, PropertiesAndItems> _evalulationResults = [];
     private readonly AnalyzerManager _manager;
     private readonly ProjectAnalyzer _analyzer;
     private readonly ILogger<EventProcessor> _logger;
@@ -28,7 +28,7 @@ internal class EventProcessor : IDisposable
         _manager = manager;
         _analyzer = analyzer;
         _logger = manager.LoggerFactory?.CreateLogger<EventProcessor>();
-        _buildLoggers = buildLoggers ?? Array.Empty<Microsoft.Build.Framework.ILogger>();
+        _buildLoggers = buildLoggers ?? [];
         _eventSource = eventSource;
         _analyze = analyze;
 

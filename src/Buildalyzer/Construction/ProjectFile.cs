@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Xml.Linq;
 
@@ -13,11 +12,11 @@ public class ProjectFile : IProjectFile
     /// <summary>
     /// These imports are known to require a .NET Framework host and build tools.
     /// </summary>
-    public static readonly string[] ImportsThatRequireNetFramework = new string[]
-    {
+    public static readonly string[] ImportsThatRequireNetFramework =
+    [
         "Microsoft.Portable.CSharp.targets",
         "Microsoft.Windows.UI.Xaml.CSharp.targets"
-    };
+    ];
 
     private readonly XDocument _document;
     private readonly XElement _projectElement;
@@ -90,7 +89,7 @@ public class ProjectFile : IProjectFile
         {
             allTargetFrameworks = targetFrameworksValues
                 .Where(x => x != null)
-                .SelectMany(x => x.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(v => v.Trim()));
+                .SelectMany(x => x.Split([';'], StringSplitOptions.RemoveEmptyEntries).Select(v => v.Trim()));
         }
         if (targetFrameworkValues != null)
         {
@@ -100,7 +99,7 @@ public class ProjectFile : IProjectFile
         }
         if (allTargetFrameworks != null)
         {
-            string[] distinctTargetFrameworks = allTargetFrameworks.Distinct().ToArray();
+            string[] distinctTargetFrameworks = [.. allTargetFrameworks.Distinct()];
             if (distinctTargetFrameworks.Length > 0)
             {
                 // Only return if we actually found any
@@ -120,14 +119,13 @@ public class ProjectFile : IProjectFile
                 if (TargetFrameworkIdentifierToTargetFramework.TryGetValue(value.Item1, out (string, bool) targetFramework))
                 {
                     // Append the TargetFrameworkVersion, stripping non-digits (this probably isn't correct in some cases)
-                    return targetFramework.Item1 + new string(value.Item2.Where(x => char.IsDigit(x) || (targetFramework.Item2 && x == '.')).ToArray());
+                    return targetFramework.Item1 + new string([.. value.Item2.Where(x => char.IsDigit(x) || (targetFramework.Item2 && x == '.'))]);
                 }
 
                 // Otherwise ¯\_(ツ)_/¯
                 return null;
             })
-            .Where(x => x != null).ToArray()
-                ?? Array.Empty<string>();
+            .Where(x => x != null).ToArray() ?? [];
     }
 
     // Map from TargetFrameworkIdentifier back to a TargetFramework
@@ -135,7 +133,7 @@ public class ProjectFile : IProjectFile
     // See also https://blog.stephencleary.com/2012/05/framework-profiles-in-net.html
     // Can't handle ".NETPortable" because those split out as complex "portable-" TargetFramework
     // Value = (TargetFramework, preserve dots in version)
-    private static readonly Dictionary<string, (string, bool)> TargetFrameworkIdentifierToTargetFramework = new Dictionary<string, (string, bool)>
+    private static readonly Dictionary<string, (string, bool)> TargetFrameworkIdentifierToTargetFramework = new()
     {
         { ".NETStandard", ("netstandard", true) },
         { ".NETCoreApp", ("netcoreapp", true) },
