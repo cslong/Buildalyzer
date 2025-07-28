@@ -12,6 +12,6 @@ public class PackageReference : IPackageReference
         this.Name = packageReferenceElement.GetAttributeValue("Include") ?? packageReferenceElement.GetAttributeValue("Update");
         var versionElement = packageReferenceElement.DescendantsAndSelf()
             .FirstOrDefault(x => x.Name.LocalName == "Version");
-        this.Version = versionElement?.Value ?? packageReferenceElement.GetAttributeValue("Version");
+        this.Version = packageReferenceElement.GetAttributeValue("Version") ?? versionElement?.Value;
     }
 }
